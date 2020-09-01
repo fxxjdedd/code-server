@@ -5,6 +5,7 @@ import http from "http"
 import * as path from "path"
 import { CliMessage, OpenCommandPipeArgs } from "../../lib/vscode/src/vs/server/ipc"
 import { plural } from "../common/util"
+import { HealthHttpProvider } from "./app/health"
 import { LoginHttpProvider } from "./app/login"
 import { ProxyHttpProvider } from "./app/proxy"
 import { StaticHttpProvider } from "./app/static"
@@ -80,6 +81,7 @@ const main = async (args: Args, cliArgs: Args, configArgs: Args): Promise<void> 
   httpServer.registerHttpProvider("/proxy", ProxyHttpProvider)
   httpServer.registerHttpProvider("/login", LoginHttpProvider, args.config!, envPassword)
   httpServer.registerHttpProvider("/static", StaticHttpProvider)
+  httpServer.registerHttpProvider("/healthz", HealthHttpProvider, httpServer.heart)
 
   await loadPlugins(httpServer, args)
 
